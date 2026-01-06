@@ -58,6 +58,22 @@ const router = createRouter({
       component: () => import('@/views/AdminLoginView.vue')
     },
     {
+      path: '/change-password',
+      name: 'change-password',
+      component: () => import('@/views/ChangePasswordView.vue'),
+      beforeEnter: requireAdmin
+    },
+    {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: () => import('@/views/ResetPasswordView.vue')
+    },
+    {
+      path: '/update-password',
+      name: 'update-password',
+      component: () => import('@/views/UpdatePasswordView.vue')
+    },
+    {
       path: '/auth/callback',
       name: 'auth-callback',
       component: () => import('@/views/AuthCallback.vue')

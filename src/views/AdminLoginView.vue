@@ -38,6 +38,11 @@
         {{ message }}
       </div>
       
+      <div class="login-actions">
+        <router-link to="/change-password" class="change-link">修改密码</router-link>
+        <router-link to="/reset-password" class="forgot-link">忘记密码？</router-link>
+      </div>
+      
       <div class="login-hint">
         <p>如果您还没有账户，需要在 Supabase 控制台中创建用户</p>
         <p>前往 Supabase → Authentication → Users → Add User</p>
@@ -190,6 +195,26 @@ label {
   background: #eff;
   color: #33c;
   border: 1px solid #cce;
+}
+
+.login-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.change-link,
+.forgot-link {
+  color: #007bff;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.change-link:hover,
+.forgot-link:hover {
+  text-decoration: underline;
 }
 
 .login-hint {
