@@ -5,22 +5,16 @@
       <div class="container">
         <nav class="nav">
           <router-link to="/" class="site-title">
-            <span class="title-text">文艺小筑</span>
+            <span class="title-text">时光小筑🐖</span>
             <span class="title-sub">Artisan's Corner</span>
           </router-link>
           
           <div class="nav-links">
-            <router-link to="/" class="nav-link">首页</router-link>
-            <router-link to="/articles" class="nav-link">文章</router-link>
-            <router-link to="/about" class="nav-link">关于</router-link>
-            <router-link to="/archive" class="nav-link">归档</router-link>
-            
-            <!-- 管理员菜单 -->
-            <div v-if="isAdmin" class="admin-menu">
-              <router-link to="/editor" class="nav-link">写文章</router-link>
-              <button @click="handleLogout" class="nav-link logout-btn">登出</button>
-            </div>
-            <router-link v-else to="/admin-login" class="nav-link">登录</router-link>
+            <router-link to="/" class="nav-link" exact-active-class="router-link-active">首页</router-link>
+            <router-link to="/articles" class="nav-link" exact-active-class="router-link-active">文章</router-link>
+            <router-link to="/about" class="nav-link" exact-active-class="router-link-active">关于</router-link>
+            <router-link to="/archive" class="nav-link" exact-active-class="router-link-active">归档</router-link>
+            <router-link v-if="isAdmin" to="/editor" class="nav-link" exact-active-class="router-link-active">写文章</router-link>
           </div>
         </nav>
       </div>
@@ -38,14 +32,14 @@
       <div class="container">
         <div class="footer-content">
           <div class="footer-text">
-            <p>© {{ new Date().getFullYear() }} 文艺小筑</p>
-            <p class="footer-quote">「生活不在别处，当下即是全部」</p>
+            <p>© {{ new Date().getFullYear() }} 时光小筑</p>
+            <p class="footer-quote">字里行间 · 保持记录，保持思考</p>
           </div>
-          <div class="footer-links">
+          <!-- <div class="footer-links">
             <a href="#" class="footer-link">GitHub</a>
             <a href="#" class="footer-link">Twitter</a>
             <a href="#" class="footer-link">RSS</a>
-          </div>
+          </div> -->
         </div>
       </div>
     </footer>
@@ -53,51 +47,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { useRouter } from 'vue-router'
-import { logout, checkAuth } from '@/config/supabase'
+import { useAuthStore } from '@/stores/auth'
 
-const router = useRouter()
-const isAdmin = ref(false)
-
-// 检查登录状态
-const checkAdminStatus = async () => {
-  isAdmin.value = await checkAuth()
-}
-
-// 处理登出
-const handleLogout = async () => {
-  try {
-    await logout()
-    localStorage.removeItem('blog_admin')
-    isAdmin.value = false
-    router.push('/')
-  } catch (error) {
-    console.error('登出失败:', error)
-  }
-}
-
-// 监听认证状态变化
-const setupAuthListener = () => {
-  import('@/config/supabase').then(({ supabase }) => {
-    supabase.auth.onAuthStateChange((event) => {
-      if (event === 'SIGNED_IN') {
-        isAdmin.value = true
-      } else if (event === 'SIGNED_OUT') {
-        isAdmin.value = false
-      }
-    })
-  })
-}
-
-onMounted(async () => {
-  await checkAdminStatus()
-  setupAuthListener()
-})
-
-onUnmounted(() => {
-  // 清理监听器
-})
+// 使用 Pinia store 管理登录状态
+const authStore = useAuthStore()
+const isAdmin = authStore.isAdmin
 </script>
 
 <style scoped lang="scss">
@@ -108,7 +62,7 @@ onUnmounted(() => {
 }
 
 .site-header {
-  padding: 8px 0;
+  padding: .8rem 0;
   border-bottom: 1px solid var(--color-border);
   background: var(--color-bg);
   position: sticky;
@@ -123,19 +77,25 @@ onUnmounted(() => {
   }
 }
 
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.4rem;
+}
+
 .site-title {
   display: flex;
   flex-direction: column;
   
   .title-text {
-    font-size: 24px;
+    font-size: 2.4rem;
     font-weight: 500;
     letter-spacing: 2px;
     line-height: normal;
   }
   
   .title-sub {
-    font-size: 12px;
+    font-size: 1.2rem;
     color: var(--color-text-lighter);
     font-family: var(--font-sans);
     letter-spacing: 1px;
@@ -144,16 +104,14 @@ onUnmounted(() => {
 
 .nav-links {
   display: flex;
-  gap: 15px;
+  gap: 3rem;
   align-items: center;
 }
 
 .nav-link {
-  font-size: 1rem;
+  font-size: 1.6rem;
+  padding: .5rem 0;
   position: relative;
-  padding: var(--space-xs) 0;
-  background: none;
-  border: none;
   cursor: pointer;
   color: inherit;
   
@@ -171,67 +129,17 @@ onUnmounted(() => {
   }
 }
 
-.logout-btn {
-  color: var(--color-error);
-  
-  &:hover {
-    color: var(--color-primary);
-  }
-}
 
-.admin-menu {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  
-  &::before {
-    content: '|';
-    color: var(--color-border);
-    margin-right: 5px;
-  }
-}
 
 .main-content {
   flex: 1;
-  padding: var(--space-xxl) 0;
+  padding: 4rem 0;
 }
 
 .site-footer {
-  padding: var(--space-xl) 0;
+  padding: 2rem 0;
   border-top: 1px solid var(--color-border);
-  background: var(--color-bg-secondary);
-  
-  .footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
 }
 
-.footer-text {
-  p {
-    margin-bottom: var(--space-xs);
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-  }
-}
 
-.footer-quote {
-  font-style: italic;
-  color: var(--color-text-light);
-  font-size: 0.9rem;
-}
-
-.footer-links {
-  display: flex;
-  gap: var(--space-lg);
-}
-
-.footer-link {
-  font-family: var(--font-sans);
-  font-size: 0.9rem;
-  color: var(--color-text-light);
-}
 </style>

@@ -1,25 +1,45 @@
+// api.js
 import { supabase, getCurrentUser } from '@/config/supabase'
 
-// 获取所有文章
-export async function getArticles() {
-  const { data, error } = await supabase
+// 获取分页文章
+export async function getPaginatedArticles(page = 1, itemsPerPage = 10, filters = {}) {
+  const startIndex = (page - 1) * itemsPerPage
+  
+  let query = supabase
     .from('articles')
-    .select('*')
+    .select('*', { count: 'exact' })
     .eq('is_published', true)
     .order('created_at', { ascending: false })
+
+  // 应用筛选条件
+  if (filters.tag) {
+    query = query.eq('tag', filters.tag)
+  }
+  
+  if (filters.year) {
+    const startDate = new Date(filters.year, 0, 1).toISOString()
+    const endDate = new Date(filters.year, 11, 31, 23, 59, 59).toISOString()
+    query = query.gte('created_at', startDate).lte('created_at', endDate)
+  }
+  
+  if (filters.search) {
+    query = query.or(`title.ilike.%${filters.search}%,excerpt.ilike.%${filters.search}%,content.ilike.%${filters.search}%`)
+  }
+
+  // 分页
+  const { data, error, count } = await query
+    .range(startIndex, startIndex + itemsPerPage - 1)
 
   if (error) throw error
-  return data
+  return { data, total: count || 0 }
 }
 
-// 根据标签获取文章
-export async function getArticlesByTag(tag) {
+// 获取所有文章（用于筛选选项）
+export async function getAllArticlesForFilter() {
   const { data, error } = await supabase
     .from('articles')
-    .select('*')
-    .eq('tag', tag)
+    .select('created_at, tag')
     .eq('is_published', true)
-    .order('created_at', { ascending: false })
 
   if (error) throw error
   return data
@@ -76,12 +96,49 @@ export async function updateArticle(id, updates) {
 
 // 删除文章
 export async function deleteArticle(id) {
-  const { error } = await supabase
-    .from('articles')
-    .delete()
-    .eq('id', id)
-
-  if (error) throw error
+  try {
+    // 获取当前用户
+    const user = await getCurrentUser()
+    
+    if (!user) {
+      throw new Error('用户未登录')
+    }
+    
+    // 首先检查用户是否有权限删除这篇文章
+    const { data: article, error: fetchError } = await supabase
+      .from('articles')
+      .select('user_id')
+      .eq('id', id)
+      .single()
+    
+    if (fetchError) {
+      throw new Error('文章不存在或无法访问')
+    }
+    
+    // 检查用户是否是文章的作者（或者如果是管理员）
+    const isAdminUser = localStorage.getItem('blog_admin') === 'true'
+    if (article.user_id !== user.id && !isAdminUser) {
+      throw new Error('您没有权限删除此文章')
+    }
+    
+    // 执行删除操作
+    const { error: deleteError } = await supabase
+      .from('articles')
+      .delete()
+      .eq('id', id)
+    
+    if (deleteError) {
+      console.error('删除失败详情:', deleteError)
+      throw new Error(`删除失败: ${deleteError.message}`)
+    }
+    
+    // 返回删除成功的标志
+    return { success: true, message: '文章删除成功' }
+    
+  } catch (error) {
+    console.error('删除文章过程中出错:', error)
+    throw error
+  }
 }
 
 // 获取归档数据
@@ -137,5 +194,17 @@ export async function getArchiveData() {
 // 检查是否管理员
 export async function isAdmin() {
   const user = await getCurrentUser()
-  return !!user
+  return !! user
+}
+
+// 获取所有已发布文章
+export async function getArticles() {
+  const { data, error } = await supabase
+    .from('articles')
+    .select('*')
+    .eq('is_published', true)
+    .order('created_at', { ascending: false })
+
+  if (error) throw error
+  return data
 }

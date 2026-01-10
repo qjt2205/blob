@@ -1,16 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import BasicLayout from '@/layouts/BasicLayout.vue'
-import { checkAuth } from '@/config/supabase'
-
-// 路由守卫 - 检查管理员权限
-const requireAdmin = async (to, from, next) => {
-  const isAuthenticated = await checkAuth()
-  if (isAuthenticated) {
-    next()
-  } else {
-    next('/admin-login')
-  }
-}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,61 +11,64 @@ const router = createRouter({
         {
           path: '',
           name: 'home',
-          component: () => import('@/views/HomeView.vue')
+          component: () => import('@/views/uipage/HomeView.vue')
         },
         {
           path: 'articles',
           name: 'articles',
-          component: () => import('@/views/ArticlesView.vue')
+          component: () => import('@/views/uipage/ArticlesView.vue')
         },
         {
           path: 'articles/:id',
           name: 'article',
-          component: () => import('@/views/ArticleView.vue')
+          component: () => import('@/views/uipage/ArticleView.vue')
         },
         {
           path: 'about',
           name: 'about',
-          component: () => import('@/views/AboutView.vue')
+          component: () => import('@/views/uipage/AboutView.vue')
         },
         {
           path: 'archive',
           name: 'archive',
-          component: () => import('@/views/ArchiveView.vue')
+          component: () => import('@/views/uipage/ArchiveView.vue')
         }
       ]
     },
     {
       path: '/editor',
-      name: 'editor',
-      component: () => import('@/views/EditorView.vue'),
-      beforeEnter: requireAdmin
+      name: 'editor-create',
+      component: () => import('@/views/adminpage/EditorView.vue')
+    },
+    {
+      path: '/editor/:id',
+      name: 'editor-edit',
+      component: () => import('@/views/adminpage/EditorView.vue')
     },
     {
       path: '/admin-login',
       name: 'admin-login',
-      component: () => import('@/views/AdminLoginView.vue')
+      component: () => import('@/views/adminpage/AdminLoginView.vue')
     },
     {
       path: '/change-password',
       name: 'change-password',
-      component: () => import('@/views/ChangePasswordView.vue'),
-      beforeEnter: requireAdmin
+      component: () => import('@/views/adminpage/ChangePasswordView.vue')
     },
     {
       path: '/reset-password',
       name: 'reset-password',
-      component: () => import('@/views/ResetPasswordView.vue')
+      component: () => import('@/views/adminpage/ResetPasswordView.vue')
     },
     {
       path: '/update-password',
       name: 'update-password',
-      component: () => import('@/views/UpdatePasswordView.vue')
+      component: () => import('@/views/adminpage/UpdatePasswordView.vue')
     },
     {
       path: '/auth/callback',
       name: 'auth-callback',
-      component: () => import('@/views/AuthCallback.vue')
+      component: () => import('@/views/adminpage/AuthCallback.vue')
     }
   ]
 })

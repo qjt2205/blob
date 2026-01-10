@@ -88,13 +88,18 @@ onMounted(() => {
 }
 
 .page-description {
+  margin-top: .5rem;
   color: var(--color-text-light);
-  font-size: 1.125rem;
+  font-size: 1.2rem;
 }
 
 .loading-container {
+  margin-top: 4rem;
   text-align: center;
   padding: var(--space-xxl) 0;
+  p {
+    font-size: 1.4rem;
+  }
 }
 
 .loading-spinner {
@@ -103,7 +108,7 @@ onMounted(() => {
   border: 3px solid var(--color-border);
   border-top-color: var(--color-primary);
   border-radius: 50%;
-  margin: 0 auto var(--space-md);
+  margin: 30rem auto 2rem;
   animation: spin 1s linear infinite;
 }
 
@@ -113,6 +118,8 @@ onMounted(() => {
 
 .empty-state {
   text-align: center;
+  font-size: 1.6rem;
+  margin-top: 3rem;
   padding: var(--space-xxl) 0;
   color: var(--color-text-light);
 }
@@ -125,7 +132,7 @@ onMounted(() => {
     content: '';
     position: absolute;
     left: 9px;
-    top: 0;
+    top: 5px;
     bottom: 0;
     width: 2px;
     background: linear-gradient(
@@ -138,7 +145,7 @@ onMounted(() => {
 
 .timeline-year {
   position: relative;
-  margin-bottom: var(--space-xxl);
+  margin: 3rem 0;
   
   &:last-child {
     margin-bottom: 0;
@@ -155,19 +162,19 @@ onMounted(() => {
 }
 
 .year-circle {
-  width: 20px;
-  height: 20px;
+  width: 2rem;
+  height: 2rem;
   border-radius: 50%;
   background: var(--color-primary);
   position: absolute;
-  left: -1.5rem;
+  left: -2rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1;
 }
 
 .year-title {
-  font-size: 1.75rem;
+  font-size: 2rem;
   margin: 0;
   
   &::after {
@@ -178,9 +185,8 @@ onMounted(() => {
 .year-count {
   font-family: var(--font-sans);
   color: var(--color-text-lighter);
-  font-size: 0.9rem;
-  background: var(--color-bg-secondary);
-  padding: var(--space-xs) var(--space-sm);
+  font-size: 1.4rem;
+  padding: 0 1rem;
   border-radius: var(--radius-sm);
 }
 
@@ -197,8 +203,8 @@ onMounted(() => {
 }
 
 .month-title {
-  font-size: 1.25rem;
-  margin-bottom: var(--space-md);
+  font-size: 2.4rem;
+  margin: 3rem 2rem;
   color: var(--color-text-light);
   
   &::after {
@@ -209,19 +215,20 @@ onMounted(() => {
 .articles-list {
   display: flex;
   flex-direction: column;
-  gap: var(--space-md);
+  gap: 1rem;
+  margin-left: 3rem;
 }
 
 .article-link {
   display: flex;
   align-items: center;
-  gap: var(--space-lg);
-  padding: var(--space-sm) var(--space-md);
-  border-radius: var(--radius-md);
+  gap: 3rem;
+  padding: 1rem 1rem;
+  border-radius: 4px;
   transition: all 0.3s ease;
   
   &:hover {
-    background: var(--color-bg-secondary);
+    background: var(--color-primary-hover);
     transform: translateX(4px);
     
     .article-title {
@@ -232,13 +239,15 @@ onMounted(() => {
 
 .article-date {
   font-family: var(--font-mono);
-  font-size: 0.875rem;
+  font-size: 1.2rem;
   color: var(--color-text-lighter);
   min-width: 2.5rem;
+  margin-left: 1rem;
 }
 
 .article-title {
   flex: 1;
-  transition: color 0.3s ease;
+  font-size: 1.6rem;
+  transition: color 0.2s ease;
 }
 </style>

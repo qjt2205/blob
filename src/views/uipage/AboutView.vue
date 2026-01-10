@@ -6,14 +6,9 @@
     </div>
 
     <div class="about-content">
-      <div class="about-image">
-        <div class="image-placeholder">
-          <div class="placeholder-text">𝓐𝓻𝓽</div>
-        </div>
-      </div>
-      
+      <div class="img"><img src="@/assets/img/bg.png" alt=""></div>      
       <div class="about-text">
-        <p>你好，我是这个博客的作者。在这个数字化的时代，我试图用文字记录生活的点滴，寻找日常中的诗意。</p>
+        <p>在这个数字化的时代，我试图用文字记录生活的点滴，寻找日常中的诗意。</p>
         
         <p>我相信，生活本身就是一件艺术品，每个人都是自己生活的艺术家。无论是清晨的一杯咖啡，还是黄昏的一抹余晖，都值得被认真对待。</p>
         
@@ -30,7 +25,7 @@
       <div class="interest-tags">
         <span class="interest-tag">阅读</span>
         <span class="interest-tag">写作</span>
-        <span class="interest-tag">摄影</span>
+        <span class="interest-tag">动漫</span>
         <span class="interest-tag">咖啡</span>
         <span class="interest-tag">旅行</span>
         <span class="interest-tag">音乐</span>
@@ -40,7 +35,6 @@
 </template>
 
 <script setup>
-// 关于页面逻辑
 </script>
 
 <style scoped lang="scss">
@@ -63,40 +57,32 @@
 }
 
 .page-description {
+  margin-top: .5rem;
   color: var(--color-text-light);
-  font-size: 1.125rem;
+  font-size: 1.2rem;
 }
 
 .about-content {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  gap: var(--space-xxl);
-  margin-bottom: var(--space-xxl);
-  padding-bottom: var(--space-xxl);
+  margin: 3rem 0;
+  padding-bottom: 3rem;
   border-bottom: 1px solid var(--color-border);
-  
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: var(--space-xl);
+
+  .img {
+    width: 80rem;
+    height: auto;
+    margin: 0 auto 3rem;
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
   }
 }
 
-.about-image {
-  .image-placeholder {
-    width: 100%;
-    aspect-ratio: 1;
-    background: linear-gradient(135deg, var(--color-bg-secondary), var(--color-accent));
-    border-radius: var(--radius-lg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--color-primary);
-    font-size: 3rem;
-    font-family: var(--font-serif);
-  }
-}
 
 .about-text {
+  max-width: 80rem;
+  margin: 0 auto;
   p {
     margin-bottom: var(--space-lg);
     font-size: 16px;
@@ -107,9 +93,8 @@
 blockquote {
   border-left: 3px solid var(--color-primary);
   padding-left: var(--space-lg);
-  margin: var(--space-xl) 0;
+  margin: 1rem 0;
   color: var(--color-text-light);
-  font-style: italic;
   
   p {
     margin: 0;
@@ -128,12 +113,13 @@ blockquote {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 15px;
+  gap: 1.5rem;
+  margin-top: 2.5rem;
 }
 
 .interest-tag {
-  padding: 4px 30px;
-  background: var(--color-bg-secondary);
+  padding: .4rem 3rem;
+  background: #eee;
   border-radius: 2px;
   color: var(--color-primary);
   font-family: var(--font-sans);

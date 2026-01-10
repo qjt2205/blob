@@ -8,11 +8,13 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { supabase } from '@/config/supabase'
+import { useAuthStore } from '@/stores/auth'
 
 const router = useRouter()
+const authStore = useAuthStore()
 const message = ref('正在验证登录...')
 
 onMounted(async () => {
@@ -25,8 +27,8 @@ onMounted(async () => {
     }
     
     if (session) {
-      // 登录成功
-      localStorage.setItem('blog_admin', 'true')
+      // 登录成功，更新 Pinia store
+      authStore.login(session.user.email)
       message.value = '登录成功！正在跳转...'
       
       setTimeout(() => {
